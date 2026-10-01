@@ -18,8 +18,7 @@ and the reporting characteristics and robustness analyses of Supplementary Table
     clock time.
   - **The analysis uses no other information:** no medication or drug names, no triggers or symptoms, no
     demographic, free-text or contact information. These were out of scope.
-- **Origin of the data.** The de-identified extract was provided by Healint Pte Ltd, developer of Migraine Buddy, to
-  Prof. Peter J. Goadsby (King's College London) under a data-sharing arrangement. 
+- **Origin of the data.** The de-identified extract was provided by Healint Pte Ltd, developer of Migraine Buddy, in 2023 to Prof. Peter J. Goadsby (King's College London) under a data-sharing arrangement. 
 
 ## What the code does
 
