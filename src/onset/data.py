@@ -1,7 +1,7 @@
 """Loading and validation of the de-identified attack extract.
 
 Privacy by design: the analysis runs only on the shareable extract, whose columns are exactly USED_COLUMNS (see DATA.md);
-a file with any other field is refused. User identifiers must be one-way hashes; the only location information is the
+a file with any other field is refused. User identifiers are de-identified and specific to this study (format checked); the only location information is the
 device time zone. The shareable extract contains only included records: a file containing records that do not meet the
 inclusion criteria (single-attack users, attacks < 2 h, criteria not attested) is refused rather than filtered.
 """
@@ -14,7 +14,7 @@ from onset import config
 
 # The complete list of fields used by this analysis (see DATA.md). Nothing else is read.
 USED_COLUMNS = {
-    "hashed_userid": "string",                 # one-way hash of the app user identifier (32 hexadecimal characters)
+    "hashed_userid": "string",                 # de-identified, study-specific user identifier (32 hexadecimal characters)
     "timezone": "string",                      # IANA time zone of the device: the only location information used
     "starttime_local": "string",               # attack start, local clock time (YYYY-MM-DD hh:mm:ss.sss)
     "starttime_utc_unix_timestamp": "int64",   # attack start, UTC (seconds)
@@ -23,7 +23,7 @@ USED_COLUMNS = {
     "endtime_local_unix_timestamp": "int64",   # attack end, local clock time expressed in seconds
     "creation_starttime_diff_secs": "int64",   # delay between attack start and creation of the record (seconds)
     # Inclusion criteria verified by Healint at extraction; attestations, True on every row (see DATA.md)
-    "research_opt_in": "boolean",              # the user opted in to the anonymous use of their data for research
+    "research_opt_in": "boolean",              # the user opted in, within the app, to the use of their data for research
     "adult": "boolean",                        # the user is an adult
     "under_87_years": "boolean",               # the user is less than 87 years old
 }
@@ -50,7 +50,7 @@ def read_extract(path) -> pd.DataFrame:
 def validate(df: pd.DataFrame) -> None:
     """Fail loudly if the extract does not match the expected de-identified format."""
     if not df["hashed_userid"].str.fullmatch(HASH_PATTERN).all():
-        raise DataValidationError("User identifiers must be one-way hashes (32 hexadecimal characters).")
+        raise DataValidationError("User identifiers must be 32 hexadecimal characters (de-identified study identifiers).")
     zones = set(df["timezone"].unique())
     if zones != {config.TIME_ZONE}:
         raise DataValidationError(f"Expected a single time zone {config.TIME_ZONE!r}, found {sorted(zones)}.")
