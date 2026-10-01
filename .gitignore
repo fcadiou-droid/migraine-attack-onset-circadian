@@ -1,0 +1,13 @@
+# No data in this repository, ever.
+data/*
+!data/README.md
+*.csv
+*.parquet
+*.zip
+*.pkl
+outputs/
+# Environment
+.venv/
+__pycache__/
+.pytest_cache/
+.DS_Store

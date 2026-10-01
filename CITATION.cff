@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the article below."
+title: "migraine-attack-onset-circadian: analysis code for the circadian pattern of migraine attack onset"
+license: MIT
+authors:
+  - family-names: Cadiou
+    given-names: François
+preferred-citation:
+  type: article
+  title: "Circadian regulation of migraine susceptibility"
+  authors:
+    - family-names: Strother
+      given-names: Lauren C.
+    - name: "et al."
+    - family-names: Holland
+      given-names: Philip R.
+  status: submitted
