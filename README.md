@@ -39,7 +39,8 @@ All parameters are fixed in [`src/onset/config.py`](src/onset/config.py).
 ```bash
 python -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python -m pytest tests            # synthetic data only
-.venv/bin/python scripts/run_analysis.py --data data/attacks.csv --out outputs
+# place the shareable extract in data/ (see DATA.md), then:
+.venv/bin/python scripts/run_analysis.py
 ```
 
 The analysis takes about one minute on a laptop for 2.3 million attacks. It was tested with Python 3.14.

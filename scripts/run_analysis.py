@@ -1,6 +1,6 @@
 """Reproduce Fig. 1A, its source data and Supplementary Table 2.
 
-Usage: python scripts/run_analysis.py --data data/attacks.csv --out outputs
+Usage: python scripts/run_analysis.py [--data data/migraine_attacks_us_east_shareable.csv] [--out outputs]
 """
 import argparse
 import json
@@ -17,7 +17,7 @@ from onset.figures import rose_plot                                          # n
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--data", required=True, help="de-identified attack extract (CSV); not distributed")
+    ap.add_argument("--data", default=config.DATA_FILE, help="the shareable extract (see DATA.md); not distributed")
     ap.add_argument("--out", default="outputs", help="output folder")
     args = ap.parse_args()
     out = Path(args.out)

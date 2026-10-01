@@ -1,8 +1,17 @@
 # Shareable extract: data dictionary
 
-The analysis runs on a **shareable extract** derived from Healint's internal Migraine Buddy extract. The shareable
-extract keeps **only the 8 fields listed below**, and nothing else. It is **not distributed** with this repository and
-is available on reasonable request (see README).
+The analysis runs on a single dataset, the **shareable extract** `migraine_attacks_us_east_shareable.csv`. It contains
+**only the 8 fields listed below**, and nothing else. It is **not distributed** with this repository and is available
+on reasonable request (see README).
+
+| | |
+|---|---|
+| File name | `migraine_attacks_us_east_shareable.csv` |
+| Rows (attacks) / users | 2,344,884 / 194,358 (before exclusion of single-attack users) |
+| Period (local time) | 9 January 2014 – 24 May 2023 |
+| SHA-256 | `174f28e3b579ad0c57558cc2c0dc55fb4c004fdc35ac84c47a7cf45e00b6bf04` |
+
+To check that you have received the exact file: `shasum -a 256 migraine_attacks_us_east_shareable.csv`.
 
 Each row is one migraine attack recorded by a Migraine Buddy user who had opted in to the anonymous use of their data
 for research.
@@ -26,7 +35,7 @@ for research.
 - demographic data;
 - free text.
 
-**Selection applied at extraction:**
+**Selection already applied in the shareable extract:**
 - users located in the United States Eastern time zone;
 - attacks recorded between January 2014 and May 2023;
 - attacks lasting at least 2 h, since shorter episodes cannot be reliably classified as migraine attacks (untreated

@@ -31,7 +31,7 @@ def test_shareable_file_is_read_with_exactly_the_declared_columns(csv_path):
 
 
 def test_a_file_with_additional_fields_is_refused(tmp_path):
-    path = tmp_path / "internal_like.csv"
+    path = tmp_path / "file_with_additional_fields.csv"
     synthetic_extract([(1, 7, 12, 0), (1, 31, 36, 0)], extra_columns=True).to_csv(path, index=False)
     with pytest.raises(DataValidationError, match="Unexpected"):
         read_extract(path)

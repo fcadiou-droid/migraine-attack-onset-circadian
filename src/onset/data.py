@@ -30,8 +30,8 @@ class DataValidationError(ValueError):
 
 
 def read_extract(path) -> pd.DataFrame:
-    """Read the shareable extract. Its columns must be exactly USED_COLUMNS: any other field (for example from an
-    internal, more detailed extract) is refused, so that the analysis can only run on the limited-field file."""
+    """Read the shareable extract. Its columns must be exactly USED_COLUMNS: a file with any other field is refused,
+    so that the analysis can only run on the shareable extract."""
     header = list(pd.read_csv(path, nrows=0).columns)
     unexpected = [c for c in header if c not in USED_COLUMNS]
     missing = [c for c in USED_COLUMNS if c not in header]

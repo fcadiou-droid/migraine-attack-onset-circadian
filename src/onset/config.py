@@ -1,9 +1,12 @@
 """Analysis parameters. All values are fixed in advance and documented in the README."""
 
+# Dataset (see DATA.md)
+DATA_FILE = "data/migraine_attacks_us_east_shareable.csv"
+
 # Study population
 TIME_ZONE = "America/New_York"      # regional dataset: users in the United States Eastern time zone
 MIN_ATTACKS_PER_USER = 2            # users with a single recorded attack are excluded (possible test records)
-MIN_DURATION_S = 2 * 3600           # attacks shorter than 2 h were excluded at extraction; verified on load
+MIN_DURATION_S = 2 * 3600           # the shareable extract contains only attacks lasting ≥ 2 h; verified on load
 
 # Outcome
 PEAK_HOURS = [6, 7, 8, 9, 10]       # 06:00–10:59 local time ("06:00–11:00")

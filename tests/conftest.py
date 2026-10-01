@@ -17,7 +17,8 @@ def fake_hash(i):
 
 def synthetic_extract(rows, extra_columns=False):
     """rows = [(user_index, start_h, end_h, delay_s)] in local hours relative to day 0; local time = UTC − 5 h.
-    extra_columns=True mimics a more detailed internal extract (coordinates, medication), which must be refused."""
+    extra_columns=True adds fields that are not part of the shareable extract (coordinates, medication): such a file
+    must be refused."""
     out = []
     for u, s, e, delay in rows:
         start_local, end_local = D0 + s * H, D0 + e * H
