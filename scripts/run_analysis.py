@@ -23,7 +23,7 @@ def main():
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
 
-    df, n_single = load(args.data)
+    df = load(args.data)
     counts = user_hour_matrix(df).sum(axis=0)
     rose_plot(counts, out / "fig1a")
     with open(out / "fig1a_source_data.csv", "w") as f:              # aggregated hourly counts (Source Data)
@@ -33,13 +33,11 @@ def main():
     rob = robustness_table(df)
     rob.to_csv(out / "stable2_robustness.csv", index=False)
     rep = reporting_characteristics(df)
-    rep["users_excluded_single_attack"] = n_single
     rep["period"] = f"{df['start_local'].min():%Y-%m-%d} to {df['start_local'].max():%Y-%m-%d}"
     (out / "stable2_reporting.json").write_text(json.dumps(rep, indent=2))
 
     main_row = rob.iloc[0]
-    print(f"{rep['attacks']:,} attacks from {rep['users']:,} users ({rep['period']}); "
-          f"{n_single:,} single-attack users excluded.")
+    print(f"{rep['attacks']:,} attacks from {rep['users']:,} users ({rep['period']}).")
     print(f"Onsets 06:00–11:00: {main_row.share_06_11:.1%} (95% CI {main_row.ci_low:.1%}–{main_row.ci_high:.1%}); "
           f"modal hour {main_row.modal_hour:02d}:00; minimum {main_row.min_hour:02d}:00.")
     print(f"Outputs written to {out}/")

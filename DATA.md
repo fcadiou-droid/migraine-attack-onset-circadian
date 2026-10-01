@@ -1,15 +1,15 @@
 # Shareable extract: data dictionary
 
 The analysis runs on a single dataset, the **shareable extract** `migraine_attacks_us_east_shareable.csv`. It contains
-**only the 8 fields listed below**, and nothing else. It is **not distributed** with this repository and is available
+**only the 11 fields listed below**, and nothing else. It is **not distributed** with this repository and is available
 on reasonable request (see README).
 
 | | |
 |---|---|
 | File name | `migraine_attacks_us_east_shareable.csv` |
-| Rows (attacks) / users | 2,344,884 / 194,358 (before exclusion of single-attack users) |
+| Rows (attacks) / users | 2,288,551 / 138,025 (included records only; see the selection below) |
 | Period (local time) | 9 January 2014 – 24 May 2023 |
-| SHA-256 | `174f28e3b579ad0c57558cc2c0dc55fb4c004fdc35ac84c47a7cf45e00b6bf04` |
+| SHA-256 | `b522916e1c596605324140b023cb9688fe40305882b53a757dc855414c1c7d05` |
 
 To check that you have received the exact file: `shasum -a 256 migraine_attacks_us_east_shareable.csv`.
 
@@ -26,17 +26,27 @@ for research.
 | `starttime_local_unix_timestamp` | integer (s) | Attack start, local clock time, in seconds | Calendar days (previous-day attacks, headache days) |
 | `endtime_local_unix_timestamp` | integer (s) | Attack end, local clock time, in seconds | Calendar days covered by an attack (headache days) |
 | `creation_starttime_diff_secs` | integer (s) | Delay between the attack start and the creation of the record in the app | How the start time was entered: in real time, preset offset or manual entry |
+| `research_opt_in` | boolean (`True` on every row) | The user opted in to the anonymous use of their data for research. Attestation by Healint, verified at the initial extraction | Inclusion criterion; a file with any other value is refused |
+| `adult` | boolean (`True` on every row) | The user is an adult. Attestation by Healint, verified at the initial extraction | Inclusion criterion; a file with any other value is refused |
+| `under_87_years` | boolean (`True` on every row) | The user is less than 87 years old. Attestation by Healint, verified at the initial extraction | Inclusion criterion; a file with any other value is refused |
+
+The three inclusion-criterion fields are attestations by the data provider. They are not derived from other content of
+the file, which contains no age, date of birth or consent record, and they cannot be re-verified from it.
 
 **Not included in the shareable extract**, and never used by this analysis:
 - any non-hashed identifier;
 - location below time-zone level;
 - medication or drug names;
 - triggers or premonitory symptoms;
-- demographic data;
+- demographic data (age, sex, date of birth), beyond the three inclusion-criterion attestations above;
 - free text.
 
-**Selection already applied in the shareable extract:**
+**Selection already applied in the shareable extract.** Records that do not meet these criteria are not shared; the
+code refuses a file that contains any:
+- users who opted in to research use, adults, less than 87 years old (verified at the initial extraction);
 - users located in the United States Eastern time zone;
 - attacks recorded between January 2014 and May 2023;
 - attacks lasting at least 2 h, since shorter episodes cannot be reliably classified as migraine attacks (untreated
   attacks last at least 4 h, and treatment efficacy is conventionally assessed at 2 h).
+- users with at least two recorded attacks: 56,333 users with a single recorded attack (possible test records) were
+  removed before sharing.

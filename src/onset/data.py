@@ -2,7 +2,8 @@
 
 Privacy by design: the analysis runs only on the shareable extract, whose columns are exactly USED_COLUMNS (see DATA.md);
 a file with any other field is refused. User identifiers must be one-way hashes; the only location information is the
-device time zone.
+device time zone. The shareable extract contains only included records: a file containing records that do not meet the
+inclusion criteria (single-attack users, attacks < 2 h, criteria not attested) is refused rather than filtered.
 """
 import re
 
@@ -21,7 +22,12 @@ USED_COLUMNS = {
     "starttime_local_unix_timestamp": "int64", # attack start, local clock time expressed in seconds
     "endtime_local_unix_timestamp": "int64",   # attack end, local clock time expressed in seconds
     "creation_starttime_diff_secs": "int64",   # delay between attack start and creation of the record (seconds)
+    # Inclusion criteria verified by Healint at extraction; attestations, True on every row (see DATA.md)
+    "research_opt_in": "boolean",              # the user opted in to the anonymous use of their data for research
+    "adult": "boolean",                        # the user is an adult
+    "under_87_years": "boolean",               # the user is less than 87 years old
 }
+ATTESTED_CRITERIA = ["research_opt_in", "adult", "under_87_years"]
 HASH_PATTERN = re.compile(r"^[0-9a-f]{32}$")
 
 
@@ -51,6 +57,11 @@ def validate(df: pd.DataFrame) -> None:
     duration = df["endtime_utc_unix_timestamp"] - df["starttime_utc_unix_timestamp"]
     if (duration < config.MIN_DURATION_S).any():
         raise DataValidationError("Attacks shorter than 2 h are present; the extract should exclude them.")
+    for c in ATTESTED_CRITERIA:
+        if not df[c].fillna(False).all():
+            raise DataValidationError(f"Records not attested as {c!r} are present; the extract should exclude them.")
+    if (df.groupby("hashed_userid").size() < config.MIN_ATTACKS_PER_USER).any():
+        raise DataValidationError("Users with a single attack are present; the extract should exclude them.")
 
 
 def entry_mode(delay_s) -> np.ndarray:
@@ -83,14 +94,8 @@ def add_derived(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def exclude_single_attack_users(df: pd.DataFrame) -> tuple[pd.DataFrame, int]:
-    n = df.groupby("hashed_userid")["hashed_userid"].transform("size")
-    n_single = int((df.groupby("hashed_userid").size() < config.MIN_ATTACKS_PER_USER).sum())
-    return df[n >= config.MIN_ATTACKS_PER_USER].reset_index(drop=True), n_single
-
-
-def load(path) -> tuple[pd.DataFrame, int]:
-    """Read, validate and prepare the analysis dataset. Returns (dataset, number of single-attack users excluded)."""
+def load(path) -> pd.DataFrame:
+    """Read, validate and prepare the analysis dataset (all records of the shareable extract are included)."""
     df = read_extract(path)
     validate(df)
-    return exclude_single_attack_users(add_derived(df))
+    return add_derived(df)

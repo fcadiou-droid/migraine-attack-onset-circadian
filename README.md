@@ -11,7 +11,10 @@ and the reporting characteristics and robustness analyses of Supplementary Table
 - **Consent.** Only data from Migraine Buddy users who had opted in to the anonymous use of their data for research were
   analyzed.
 - **Minimal, de-identified fields.** The analysis runs on a *shareable extract* restricted to the 8 fields it actually
-  uses (see [DATA.md](DATA.md)). The code refuses any file containing other fields.
+  uses, plus 3 attestations of the inclusion criteria (research opt-in, adult, less than 87 years old) (see
+  [DATA.md](DATA.md)). The code refuses any file containing other fields.
+- **Included records only.** Records that do not meet the inclusion criteria are not shared; the code refuses a file
+  containing any.
   - **User identifiers are one-way hashes.** The code checks that every identifier is a 32-character hash, and no
     non-hashed identifier is used.
   - **Location is limited to the device time zone** (America/New_York). It is used only to place each attack in local
@@ -26,8 +29,8 @@ and the reporting characteristics and robustness analyses of Supplementary Table
 
 | Step | Description |
 |---|---|
-| Load and validate | Reads the shareable extract (exactly the declared fields) and checks that identifiers are hashed, that there is a single time zone, and that all attacks last at least 2 h. |
-| Study population | Excludes users with a single recorded attack (possible test records). |
+| Load and validate | Reads the shareable extract (exactly the declared fields) and checks that identifiers are hashed, that there is a single time zone, that all attacks last at least 2 h, that every record is attested for the three inclusion criteria and that every user has at least two attacks. |
+| Study population | All records of the shareable extract. Users with a single recorded attack (possible test records) were removed before sharing. |
 | Main outcome | Distribution of attack onset across the 24 hours of local clock time, and the share of onsets between 06:00 and 11:00. 95% confidence intervals come from bootstrap resampling of users, since attacks are clustered within individuals. |
 | Sensitivity analyses | Each user weighted equally; original study window only (Jan 2018 – Jun 2020); attacks with no attack on the previous day; exclusion of users with any month with ≥ 15 headache days; exclusion of attacks starting < 48 h after the previous one; start time recorded in real time vs entered retrospectively; each calendar year 2015–2022. |
 | Outputs | `fig1a.{pdf,png,tiff}`, `fig1a_source_data.csv` (aggregated hourly counts), `stable2_robustness.csv`, `stable2_reporting.json`. |
@@ -49,7 +52,7 @@ The analysis takes about one minute on a laptop for 2.3 million attacks. It was 
 
 | | |
 |---|---|
-| Attacks / users | 2,288,551 / 138,025 (56,333 users with a single recorded attack excluded) |
+| Attacks / users | 2,288,551 / 138,025 (56,333 users with a single recorded attack removed before sharing) |
 | Onsets between 06:00 and 11:00 | 32.7% (95% CI 32.4–33.1), vs 20.8% under a uniform distribution |
 | Modal / least frequent hour | 07:00 / 01:00 |
 

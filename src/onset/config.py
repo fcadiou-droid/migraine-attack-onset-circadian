@@ -5,7 +5,7 @@ DATA_FILE = "data/migraine_attacks_us_east_shareable.csv"
 
 # Study population
 TIME_ZONE = "America/New_York"      # regional dataset: users in the United States Eastern time zone
-MIN_ATTACKS_PER_USER = 2            # users with a single recorded attack are excluded (possible test records)
+MIN_ATTACKS_PER_USER = 2            # users with a single recorded attack (possible test records) are not shared; verified on load
 MIN_DURATION_S = 2 * 3600           # the shareable extract contains only attacks lasting ≥ 2 h; verified on load
 
 # Outcome
