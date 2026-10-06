@@ -2,8 +2,8 @@
 
 The analysis uses the shareable extract `migraine_attacks_us_east_shareable.csv`, which contains
 the 11 fields listed below. It is not included in this repository and is not distributed: it
-remains with Healint Pte Ltd, which runs this code on it upon reasonable request and returns the aggregated outputs (see
-README).
+remains with Aptar Digital Health, which acquired Migraine Buddy from Healint Pte Ltd. Upon reasonable request to
+contact@migrainebuddy.com, Aptar Digital Health runs this code on it and returns the aggregated outputs (see README).
 
 | | |
 |---|---|
